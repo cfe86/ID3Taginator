@@ -22,7 +22,7 @@ module Id3Taginator
       def comment=(comment)
         set_frame_fields_by_selector(Comment::CommentFrame, %i[@language @descriptor @text],
                                      ->(f) { f.language == comment.language && f.descriptor == comment.descriptor },
-                                     comment.language, comment.text, comment.descriptor)
+                                     comment.language, comment.descriptor, comment.text)
       end
 
       alias add_comment comment=
@@ -33,7 +33,7 @@ module Id3Taginator
       # @param descriptor [String] the descriptor
       def remove_comment(language, descriptor)
         @frames.delete_if do |f|
-          f.identifier == Comment::CommentFrame.frame_id(@major_version, @options) && f.language == language &&
+          f.frame_id == Comment::CommentFrame.frame_id(@major_version, @options) && f.language == language &&
             f.descriptor == descriptor
         end
       end

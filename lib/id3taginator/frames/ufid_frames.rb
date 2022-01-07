@@ -20,9 +20,9 @@ module Id3Taginator
       #
       # @param identifier [Frames::Ufid::Entities::UfidInfo] the unique file identifier to add
       def unique_file_identifiers=(identifier)
-        set_frame_fields_by_selector(Ufid::UniqueFileIdentifierFrame, %i[@identifier],
+        set_frame_fields_by_selector(Ufid::UniqueFileIdentifierFrame, %i[@owner_id @identifier],
                                      ->(f) { f.owner_id == identifier.owner_id },
-                                     identifier.identifier, identifier.owner_id)
+                                     identifier.owner_id, identifier.identifier)
       end
 
       alias add_unique_file_identifier unique_file_identifiers=
@@ -30,9 +30,9 @@ module Id3Taginator
       # removes a unique file identifier for the specific owner_id
       #
       # @param owner_id [String] the owner_id
-      def remove_unique_file_identifiers(owner_id)
+      def remove_unique_file_identifier(owner_id)
         @frames.delete_if do |f|
-          f.identifier == Ufid::UniqueFileIdentifierFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
+          f.frame_id == Ufid::UniqueFileIdentifierFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
         end
       end
     end

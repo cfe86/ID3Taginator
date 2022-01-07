@@ -33,7 +33,7 @@ module Id3Taginator
       # @param descriptor [String] the descriptor
       def remove_unsync_lyrics(language, descriptor)
         @frames.delete_if do |f|
-          f.identifier == Lyrics::UnsyncLyricsFrame.frame_id(@major_version, @options) && f.language == language &&
+          f.frame_id == Lyrics::UnsyncLyricsFrame.frame_id(@major_version, @options) && f.language == language &&
             f.descriptor == descriptor
         end
       end

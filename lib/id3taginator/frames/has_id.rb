@@ -11,9 +11,9 @@ module Id3Taginator
       # 3 and 4 return the 4 char Tag, 2 returns the version2 3 char Tag
       # Additionally, a method to check if the version is supported is provided.
       #
-      # @param version2 [Symbol] the frame id for v2
-      # @param version3 [Symbol] the frame id for v3
-      # @param version4 [Symbol] the frame id for v4
+      # @param version2 [Symbol, nil] the frame id for v2
+      # @param version3 [Symbol, nil] the frame id for v3
+      # @param version4 [Symbol, nil] the frame id for v4
       def frame_info(version2, version3, version4)
         define_singleton_method('frame_id') do |version = nil, options = nil|
           result = nil

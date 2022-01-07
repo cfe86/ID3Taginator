@@ -17,6 +17,7 @@ module Id3Taginator
     include Frames::EncryptionFrames
     include Frames::GroupingFrames
     include Frames::PrivateFrames
+    include Frames::CustomFrames
 
     IDENTIFIER = 'ID3'
 
@@ -48,7 +49,7 @@ module Id3Taginator
       major_version = file.readbyte
       minor_version = file.readbyte
       flags = Header::Id3v2Flags.new(file.readbyte)
-      tag_size = Util::MathUtil.to_32_synchsafe_integer(file.read(4)&.bytes)
+      tag_size = Util::MathUtil.to_32_synchsafe_integer(file.read(4).bytes)
 
       tag_data = file.read(tag_size)
       tag_data = Util::SyncUtil.undo_synchronization(StringIO.new(tag_data)) if flags.unsynchronized?
@@ -126,6 +127,13 @@ module Id3Taginator
       raise Errors::Id3TagError, 'The given frame is no Id3v2Frame.' unless frame.is_a?(Frames::Id3v2Frame)
 
       @frames << frame
+    end
+
+    # returns the number of frames for this tag
+    #
+    # @return [Integer] number of frames
+    def number_of_frames
+      @frames.length
     end
 
     # determined if the tag is unsynchronized

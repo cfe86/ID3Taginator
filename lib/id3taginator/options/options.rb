@@ -19,8 +19,8 @@ module Id3Taginator
       #                                         supported for 2.4 e.g. Size Frame
       # @param add_size_frame [Boolean] if true, the size frame TSIZ will be added automatically to v2.3. Will be added
       #                                 to v2.4 if ignore_v24_frame_error is true
-      def initialize(default_encode_dest = Encoding::UTF_16, default_decode_dest = Encoding::UTF_8, padding_bytes = 10,
-                     ignore_v23_frame_error = true, ignore_v24_frame_error = true, add_size_frame = true)
+      def initialize(default_encode_dest = Encoding::UTF_16, default_decode_dest = Encoding::UTF_8, padding_bytes = 25,
+                     ignore_v23_frame_error = true, ignore_v24_frame_error = true, add_size_frame = false)
         @default_encode_dest = default_encode_dest
         @default_decode_dest = default_decode_dest
         @padding_bytes = padding_bytes

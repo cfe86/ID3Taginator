@@ -19,6 +19,11 @@ module Id3Taginator
         set_frame_fields(Url::CommercialUrlFrame, [:@url], url)
       end
 
+      # removes the commercial information url frame
+      def remove_commercial_information_url
+        @frames.delete_if { |f| f.frame_id == Url::CommercialUrlFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the copyright information url (WCOP/WCP)
       #
       # @return [String, nil] returns the URL
@@ -31,6 +36,11 @@ module Id3Taginator
       # @param url [String] the url
       def copyright_information_url=(url)
         set_frame_fields(Url::CopyrightUrlFrame, [:@url], url)
+      end
+
+      # removes the copyright information url frame
+      def remove_copyright_information_url
+        @frames.delete_if { |f| f.frame_id == Url::CopyrightUrlFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the official audio file url (WOAF/WAF)
@@ -47,6 +57,11 @@ module Id3Taginator
         set_frame_fields(Url::OfficialFileWebpageFrame, [:@url], url)
       end
 
+      # removes the official audio file url frame
+      def remove_official_audio_file_url
+        @frames.delete_if { |f| f.frame_id == Url::OfficialFileWebpageFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the official artist url (WOAR/WAR)
       #
       # @return [String, nil] returns the URL
@@ -59,6 +74,11 @@ module Id3Taginator
       # @param url [String] the url
       def official_artist_url=(url)
         set_frame_fields(Url::OfficialArtistWebpageFrame, [:@url], url)
+      end
+
+      # removes the official artist url frame
+      def remove_official_artist_url
+        @frames.delete_if { |f| f.frame_id == Url::OfficialArtistWebpageFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the official source url (WOAS/WAS)
@@ -75,6 +95,11 @@ module Id3Taginator
         set_frame_fields(Url::OfficialSourceWebpageFrame, [:@url], url)
       end
 
+      # removes the official source url frame
+      def remove_official_source_url
+        @frames.delete_if { |f| f.frame_id == Url::OfficialSourceWebpageFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the official radio station url (WORS)
       #
       # @return [String, nil] returns the URL
@@ -87,6 +112,13 @@ module Id3Taginator
       # @param url [String] the url
       def official_radio_station_homepage=(url)
         set_frame_fields(Url::OfficialAudioRadioStationHomepageFrame, [:@url], url)
+      end
+
+      # removes the official radio station homepage frame
+      def remove_official_radio_station_homepage
+        @frames.delete_if do |f|
+          f.frame_id == Url::OfficialAudioRadioStationHomepageFrame.frame_id(@major_version, @options)
+        end
       end
 
       # extracts the official radio station url (WPAY)
@@ -103,6 +135,11 @@ module Id3Taginator
         set_frame_fields(Url::PaymentUrlFrame, [:@url], url)
       end
 
+      # removes the payment frame
+      def remove_payment_url
+        @frames.delete_if { |f| f.frame_id == Url::PaymentUrlFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the official publisher url (WPUB/WPB)
       #
       # @return [String, nil] returns the URL
@@ -115,6 +152,11 @@ module Id3Taginator
       # @param url [String] the url
       def official_publisher_webpage=(url)
         set_frame_fields(Url::OfficialPublisherWebpageFrame, [:@url], url)
+      end
+
+      # removes the official publisher webpage frame
+      def remove_official_publisher_webpage
+        @frames.delete_if { |f| f.frame_id == Url::OfficialPublisherWebpageFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the user custom url links (WXXX/WXX)
@@ -132,9 +174,9 @@ module Id3Taginator
       #
       # @param custom_url [Frames::Url::Entities::UserInfo] the custom url link to add
       def user_custom_url_link=(custom_url)
-        set_frame_fields_by_selector(Url::UserUrlLinkFrame, %i[@url],
+        set_frame_fields_by_selector(Url::UserUrlLinkFrame, %i[@description @url],
                                      ->(f) { f.description == custom_url.description },
-                                     custom_url.url, custom_url.description)
+                                     custom_url.description, custom_url.url)
       end
 
       alias add_user_custom_url_link user_custom_url_link=
@@ -144,7 +186,7 @@ module Id3Taginator
       # @param description [String] the description
       def remove_user_custom_url_link(description)
         @frames.delete_if do |f|
-          f.identifier == Url::UserUrlLinkFrame.frame_id(@major_version, @options) &&
+          f.frame_id == Url::UserUrlLinkFrame.frame_id(@major_version, @options) &&
             f.description == description
         end
       end

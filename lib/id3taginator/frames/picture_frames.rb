@@ -40,7 +40,7 @@ module Id3Taginator
       # @param descriptor [String] the descriptor
       def remove_picture(descriptor)
         @frames.delete_if do |f|
-          f.identifier == Picture::PictureFrame.frame_id(@major_version, @options) && f.descriptor == descriptor
+          f.frame_id == Picture::PictureFrame.frame_id(@major_version, @options) && f.descriptor == descriptor
         end
       end
     end

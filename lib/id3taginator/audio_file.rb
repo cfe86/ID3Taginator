@@ -68,13 +68,6 @@ module Id3Taginator
       out_file.write(audio_file_to_byte)
     end
 
-    def write_audio_only(path)
-      out_file = File.open(path)
-      @file.seek(@audio_start_index)
-      data = @file.read(@audio_end_index - @audio_start_index + 1)
-      out_file.write(data)
-    end
-
     def audio_file_to_byte
       @id3v2_tag&.add_size_tag_if_not_present(audio_size_wo_id3v2_header)
 

@@ -165,6 +165,7 @@ require 'id3taginator/frames/tos_frames'
 require 'id3taginator/frames/encryption_frames'
 require 'id3taginator/frames/grouping_frames'
 require 'id3taginator/frames/private_frames'
+require 'id3taginator/frames/custom_frames'
 
 require 'id3taginator/id3v1_tag'
 require 'id3taginator/header/id3v2_flags'
@@ -335,7 +336,7 @@ module Id3Taginator
   # creates a picture object
   #
   # @param mime_type [String] the mime type e.g. images/png, or --> if picture data is a link
-  # @param picture_type [Integer] the picture type as symbol, e.g. :COVER_FRONT (check Picture::PictureType)
+  # @param picture_type [Symbol] the picture type as symbol, e.g. :COVER_FRONT (check Picture::PictureType)
   # @param descriptor [String] description
   # @param picture_data [String] the picture data
   # @return [Picture] the picture

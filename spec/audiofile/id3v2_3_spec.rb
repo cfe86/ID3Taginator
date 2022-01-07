@@ -95,6 +95,10 @@ RSpec.describe Id3Taginator::AudioFile do
 
     expect(audio_file_parsed.audio_data).to eq(hex_string_to_bytes(audio_bytes))
     expect(audio_file_parsed.id3v2_tag).is_a?(Id3Taginator::Id3v23Tag)
+
+    remove_frames(tag)
+
+    expect(tag.number_of_frames).to eq(0)
   end
 
   def add_frames(tag)
@@ -115,7 +119,7 @@ RSpec.describe Id3Taginator::AudioFile do
                                                 'description', 'front cover'))
     tag.add_picture(Id3Taginator.create_picture('images/png', :COVER_BACK,
                                                 'description', 'back cover'))
-    tag.add_private_frame(Id3Taginator.create_private_frame('owner id', 'priv data'))
+    tag.add_private_frame(Id3Taginator.create_private_frame('owner_id', 'priv data'))
     tag.ownership = Id3Taginator.create_ownership('$19.99', '12102021', 'seller')
     tag.terms_of_use = Id3Taginator.create_terms_of_use('eng', 'ToU')
     tag.add_unique_file_identifier(Id3Taginator.create_unique_file_identifier('owner_id', 'identifier'))
@@ -172,6 +176,79 @@ RSpec.describe Id3Taginator::AudioFile do
     tag.year = 2021
     tag.add_user_custom_text_information(Id3Taginator.create_custom_user_text_info('descr', 'content'))
     tag.add_user_custom_text_information(Id3Taginator.create_custom_user_text_info('descr2', 'content2'))
+  end
+
+  def remove_frames(tag)
+    tag.remove_recommended_buffer_size
+    tag.remove_comment('eng', 'descriptor')
+    tag.remove_play_counter
+    tag.remove_popularity
+    tag.remove_audio_encryption('owner_id')
+    tag.remove_encryption_method('owner_id')
+    tag.remove_encapsulated_object('descriptor')
+    tag.remove_group_identification('owner_id')
+    tag.remove_grouping
+    tag.remove_involved_people
+    tag.remove_unsync_lyrics('eng', 'descriptor')
+    tag.remove_music_cd_identifier
+    tag.remove_picture('description')
+    tag.remove_private_frame('owner_id')
+    tag.remove_ownership
+    tag.remove_terms_of_use
+    tag.remove_unique_file_identifier('owner_id')
+    tag.remove_commercial_information_url
+    tag.remove_copyright_information_url
+    tag.remove_official_audio_file_url
+    tag.remove_official_artist_url
+    tag.remove_official_source_url
+    tag.remove_official_radio_station_homepage
+    tag.remove_payment_url
+    tag.remove_official_publisher_webpage
+    tag.remove_user_custom_url_link('description')
+    tag.remove_user_custom_url_link('description2')
+
+    tag.remove_album
+    tag.remove_bpm
+    tag.remove_composers
+    tag.remove_genres
+    tag.remove_copyright
+    tag.remove_date
+    tag.remove_playlist_delay
+    tag.remove_encoded_by
+    tag.remove_writers
+    tag.remove_file_type
+    tag.remove_time
+    tag.remove_content_group_description
+    tag.remove_title
+    tag.remove_subtitle
+    tag.remove_initial_key
+    tag.remove_languages
+    tag.remove_length
+    tag.remove_media_type
+    tag.remove_original_album
+    tag.remove_original_filename
+    tag.remove_original_writers
+    tag.remove_original_artists
+    tag.remove_original_release_year
+    tag.remove_file_owner
+    tag.remove_artists
+    tag.remove_album_artist
+    tag.remove_conductor
+    tag.remove_modified_by
+    tag.remove_part_of_set
+    tag.remove_publisher
+    tag.remove_track_number
+    tag.remove_recording_dates
+    tag.remove_internet_radio_station_name
+    tag.remove_size
+    tag.remove_album_sort_order
+    tag.remove_performer_sort_order
+    tag.remove_title_sort_order
+    tag.remove_isrc
+    tag.remove_encoder
+    tag.remove_year
+    tag.remove_user_custom_text_information('descr')
+    tag.remove_user_custom_text_information('descr2')
   end
 
   private :add_frames

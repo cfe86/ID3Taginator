@@ -33,7 +33,7 @@ module Id3Taginator
       # @param owner_id [String] the owner_id
       def remove_group_identification(owner_id)
         @frames.delete_if do |f|
-          f.identifier == Grouping::GroupIdentificationFrame.frame_id(@major_version, @options) &&
+          f.frame_id == Grouping::GroupIdentificationFrame.frame_id(@major_version, @options) &&
             f.owner_id == owner_id
         end
       end
@@ -50,6 +50,11 @@ module Id3Taginator
       # @param grouping [String] the Grouping
       def grouping=(grouping)
         set_frame_fields(Grouping::GroupingFrame, [:@grouping], grouping)
+      end
+
+      # removes the grouping frame
+      def remove_grouping
+        @frames.delete_if { |f| f.frame_id == Grouping::GroupingFrame.frame_id(@major_version, @options) }
       end
     end
   end

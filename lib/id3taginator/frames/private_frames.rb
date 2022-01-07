@@ -20,9 +20,9 @@ module Id3Taginator
       #
       # @param priv [Frames::Private::Entities::PrivateFrame] the private frame to add
       def private_frames=(priv)
-        set_frame_fields_by_selector(Private::PrivateFrame, %i[@private_data],
+        set_frame_fields_by_selector(Private::PrivateFrame, %i[@owner_id @private_data],
                                      ->(f) { f.owner_id == priv.owner_id },
-                                     priv.private_data, priv.owner_id)
+                                     priv.owner_id, priv.private_data)
       end
 
       alias add_private_frame private_frames=
@@ -32,7 +32,7 @@ module Id3Taginator
       # @param owner_id [String] the owner_id
       def remove_private_frame(owner_id)
         @frames.delete_if do |f|
-          f.identifier == Private::PrivateFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
+          f.frame_id == Private::PrivateFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
         end
       end
     end

@@ -9,9 +9,11 @@ module Id3Taginator
       # builds a custom frame
       #
       # @param content [String] the content
+      # @param options [Options::Options] options to use
+      # @param id3_version [Integer] the id3 version to build the frame for
       #
-      # @return [CustomFrame] the custom frame
-      def self.build_frame(content, id3_version: 3)
+      # @return [Id3v2Frame] the resulting id3v2 frame
+      def self.build_frame(content, _options = nil, id3_version: 3)
         argument_not_nil(content, 'content')
 
         frame = new(frame_id, 0, build_id3_flags(id3_version), '')

@@ -35,7 +35,7 @@ module Id3Taginator
       # @param owner_id [String] the owner_id
       def remove_audio_encryption(owner_id)
         @frames.delete_if do |f|
-          f.identifier == Encryption::AudioEncryptionFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
+          f.frame_id == Encryption::AudioEncryptionFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
         end
       end
 
@@ -69,7 +69,7 @@ module Id3Taginator
       # @param owner_id [String] the owner_id
       def remove_encryption_method(owner_id)
         @frames.delete_if do |f|
-          f.identifier == Encryption::EncryptionMethodFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
+          f.frame_id == Encryption::EncryptionMethodFrame.frame_id(@major_version, @options) && f.owner_id == owner_id
         end
       end
     end

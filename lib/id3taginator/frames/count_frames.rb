@@ -19,12 +19,19 @@ module Id3Taginator
         set_frame_fields(Count::PlayCounterFrame, [:@counter], counter)
       end
 
+      # removes the play counter frame
+      def remove_play_counter
+        @frames.delete_if { |f| f.frame_id == Count::PlayCounterFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the popularity (POPM/POP)
       #
       # @return [Frames::Count::Entities::Popularimeter, nil] returns popularity
       def popularity
         frame = find_frame(Count::PopularityFrame.frame_id(@major_version, @options))
-        Count::Entities::Popularimeter.new(frame&.email, frame&.rating, frame&.counter)
+        return nil if frame.nil?
+
+        Count::Entities::Popularimeter.new(frame.email, frame.rating, frame.counter)
       end
 
       # sets a counter (POPM/POP)
@@ -33,6 +40,11 @@ module Id3Taginator
       def popularity=(popularity)
         set_frame_fields(Count::PopularityFrame, %i[@email @rating @counter],
                          popularity.email, popularity.rating, popularity.counter)
+      end
+
+      # removes the popularity frame
+      def remove_popularity
+        @frames.delete_if { |f| f.frame_id == Count::PopularityFrame.frame_id(@major_version, @options) }
       end
     end
   end

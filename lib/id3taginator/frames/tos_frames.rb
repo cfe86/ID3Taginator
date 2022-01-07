@@ -21,6 +21,11 @@ module Id3Taginator
         set_frame_fields(Tos::TermsOfUseFrame, %i[@language @text], tou.language, tou.text)
       end
 
+      # removes the terms of use frame
+      def remove_terms_of_use
+        @frames.delete_if { |f| f.frame_id == Tos::TermsOfUseFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the ownership frame (OWNE)
       #
       # @return [Frames::Tos::Entities::Ownership, nil] returns the Ownership Frame
@@ -36,6 +41,11 @@ module Id3Taginator
       def ownership=(ownership)
         set_frame_fields(Tos::OwnershipFrame, %i[@price_paid @date_of_purchase @seller],
                          ownership.price_paid, ownership.date_of_purchase, ownership.seller)
+      end
+
+      # removes the ownership frame
+      def remove_ownership
+        @frames.delete_if { |f| f.frame_id == Tos::OwnershipFrame.frame_id(@major_version, @options) }
       end
     end
   end

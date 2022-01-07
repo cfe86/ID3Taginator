@@ -30,11 +30,11 @@ module Id3Taginator
       # argument order. So e.g. fields a, b, c and arguments a_v, b_v, c_v will lead to a = a_v, b = b_v and c = c_v
       # If the frame already exists, it will be updated. Otherwise it will be created.
       #
-      # @param frame [Id3v2Frame] the frame to set the fields too
-      # @param fields [Array<String>] the fields to set, must be in the same order as the arguments
+      # @param frame [Class<Id3v2Frame>] the frame to set the fields too
+      # @param fields [Array<Symbol>] the fields to set, must be in the same order as the arguments
       # @param arguments [Array<Object>] the values to set to the fields
       def set_frame_fields(frame, fields, *arguments)
-        existing_frame = find_frame(frame.frame_id(@major_version))
+        existing_frame = find_frame(frame.frame_id(@major_version, @options))
         unless existing_frame.nil?
           fields.each_with_index { |field, index| existing_frame.instance_variable_set(field, arguments[index]) }
           return
@@ -52,12 +52,12 @@ module Id3Taginator
       # ->(f) { f.descriptor == 'a value' }
       # will be updated, if the frame.descriptor is 'a value'
       #
-      # @param frame [Id3v2Frame] the frame to set the fields too
-      # @param fields [Array<String>] the fields to set, must be in the same order as the arguments
+      # @param frame [Class<Id3v2Frame>] the frame to set the fields too
+      # @param fields [Array<Symbol>] the fields to set, must be in the same order as the arguments
       # @param selector_lambda [Proc] the lambda to find matching frames to update
       # @param arguments [Array<Object>] the values to set to the fields
       def set_frame_fields_by_selector(frame, fields, selector_lambda, *arguments)
-        existing_frames = find_frames(frame.frame_id(@major_version))
+        existing_frames = find_frames(frame.frame_id(@major_version, @options))
 
         existing_frame = existing_frames&.find { |f| selector_lambda.call(f) }
 
@@ -66,7 +66,7 @@ module Id3Taginator
           return
         end
 
-        new_frame = frame.build_frame(*arguments, id3_version: @major_version)
+        new_frame = frame.build_frame(*arguments, @options, id3_version: @major_version)
         new_frame.options = @options
         @frames << new_frame
       end

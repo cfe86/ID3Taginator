@@ -32,7 +32,7 @@ module Id3Taginator
       # @param descriptor [String] the descriptor
       def remove_encapsulated_object(descriptor)
         @frames.delete_if do |f|
-          f.identifier == Geo::GeneralEncapsulatedObjectFrame.frame_id(@major_version, @options) &&
+          f.frame_id == Geo::GeneralEncapsulatedObjectFrame.frame_id(@major_version, @options) &&
             f.descriptor == descriptor
         end
       end

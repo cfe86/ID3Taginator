@@ -21,6 +21,11 @@ module Id3Taginator
       def involved_people=(involved_people)
         set_frame_fields(Ipl::InvolvedPeopleFrame, [:@involved_people], involved_people)
       end
+
+      # removes the involved people frame
+      def remove_involved_people
+        @frames.delete_if { |f| f.frame_id == Ipl::InvolvedPeopleFrame.frame_id(@major_version, @options) }
+      end
     end
   end
 end

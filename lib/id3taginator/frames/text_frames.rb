@@ -19,6 +19,11 @@ module Id3Taginator
         set_frame_fields(Text::AlbumFrame, [:@album], album)
       end
 
+      # removes the album frame
+      def remove_album
+        @frames.delete_if { |f| f.frame_id == Text::AlbumFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the album (TSOA)
       #
       # @return [String, nil] returns the Album Sort Order
@@ -31,6 +36,11 @@ module Id3Taginator
       # @param album [String] the album for sorting
       def album_sort_order=(album)
         set_frame_fields(Text::AlbumSortOrderFrame, [:@album], album)
+      end
+
+      # removes the album sort order frame
+      def remove_album_sort_order
+        @frames.delete_if { |f| f.frame_id == Text::AlbumSortOrderFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the performer sort order (TSOP)
@@ -47,6 +57,11 @@ module Id3Taginator
         set_frame_fields(Text::PerformerSortOrderFrame, [:@performer], performer)
       end
 
+      # removes the performer sort order frame
+      def remove_performer_sort_order
+        @frames.delete_if { |f| f.frame_id == Text::PerformerSortOrderFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the title sort order (TSOT)
       #
       # @return [String, nil] returns the Title Sort Order
@@ -61,6 +76,11 @@ module Id3Taginator
         set_frame_fields(Text::TitleSortOrderFrame, [:@title], title)
       end
 
+      # removes the title sort order frame
+      def remove_title_sort_order
+        @frames.delete_if { |f| f.frame_id == Text::TitleSortOrderFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the bpm (TBPM/TBP)
       #
       # @return [String, nil] returns the bpm
@@ -73,6 +93,11 @@ module Id3Taginator
       # @param bpm [String, Integer] the bpm
       def bpm=(bpm)
         set_frame_fields(Text::BPMFrame, [:@bpm], bpm)
+      end
+
+      # removes the bpm frame
+      def remove_bpm
+        @frames.delete_if { |f| f.frame_id == Text::BPMFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the composer (TCOM/TCM)
@@ -92,6 +117,11 @@ module Id3Taginator
         set_frame_fields(Text::ComposerFrame, [:@composers], composers)
       end
 
+      # removes the composers frame
+      def remove_composers
+        @frames.delete_if { |f| f.frame_id == Text::ComposerFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the genres (TCON/TCO)
       #
       # @return [Array<String>] returns the composer
@@ -107,6 +137,11 @@ module Id3Taginator
       # @param genres [Array<String, Symbol>] the genres as String or Symbols
       def genres=(genres)
         set_frame_fields(Text::GenreFrame, [:@genres], genres)
+      end
+
+      # removes the genre frame
+      def remove_genres
+        @frames.delete_if { |f| f.frame_id == Text::GenreFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the copyright (TCOP/TCR)
@@ -126,6 +161,11 @@ module Id3Taginator
         set_frame_fields(Text::CopyrightFrame, %i[@year @holder], copyright.year, copyright.holder)
       end
 
+      # removes the copyright frame
+      def remove_copyright
+        @frames.delete_if { |f| f.frame_id == Text::CopyrightFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the date (TDAT/TDA)
       #
       # @return [Frames::Text::Entities::Date, nil] returns the date
@@ -143,6 +183,11 @@ module Id3Taginator
         set_frame_fields(Text::DateFrame, %i[@month @day], date.month, date.day)
       end
 
+      # removes the date frame
+      def remove_date
+        @frames.delete_if { |f| f.frame_id == Text::DateFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the playlist delay (TDLY/TDY)
       #
       # @return [String, nil] returns the date
@@ -157,6 +202,11 @@ module Id3Taginator
         set_frame_fields(Text::PlaylistDelayFrame, [:@delay], delay_in_ms)
       end
 
+      # removes the playlist delay frame
+      def remove_playlist_delay
+        @frames.delete_if { |f| f.frame_id == Text::PlaylistDelayFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the encoded by (TENC/TEN)
       #
       # @return [String, nil] returns the encoded by
@@ -169,6 +219,11 @@ module Id3Taginator
       # @param encoded_by [String] the encoded by
       def encoded_by=(encoded_by)
         set_frame_fields(Text::EncodedByFrame, [:@encoded_by], encoded_by)
+      end
+
+      # removes the encoded by frame
+      def remove_encoded_by
+        @frames.delete_if { |f| f.frame_id == Text::EncodedByFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the writers (TEXT/TXT)
@@ -188,6 +243,11 @@ module Id3Taginator
         set_frame_fields(Text::WritersFrame, [:@writers], writers)
       end
 
+      # removes the writers frame
+      def remove_writers
+        @frames.delete_if { |f| f.frame_id == Text::WritersFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the file type (TFLT/TFT)
       #
       # @return [String, nil] returns the file type
@@ -200,6 +260,11 @@ module Id3Taginator
       # @param file_type [String] the file type
       def file_type=(file_type)
         set_frame_fields(Text::FileTypeFrame, [:@file_type], file_type)
+      end
+
+      # removes the file type frame
+      def remove_file_type
+        @frames.delete_if { |f| f.frame_id == Text::FileTypeFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the time (TIME/TIM)
@@ -219,6 +284,11 @@ module Id3Taginator
         set_frame_fields(Text::TimeFrame, %i[@hours @minutes], time.hours, time.minutes)
       end
 
+      # removes the time frame
+      def remove_time
+        @frames.delete_if { |f| f.frame_id == Text::TimeFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the content group description (TIT1/TT1)
       #
       # @return [String, nil] returns content group description
@@ -231,6 +301,11 @@ module Id3Taginator
       # @param content_group_description [String] the content group description
       def content_group_description=(content_group_description)
         set_frame_fields(Text::ContentGroupDescriptionFrame, [:@content_group_description], content_group_description)
+      end
+
+      # removes the content group description frame
+      def remove_content_group_description
+        @frames.delete_if { |f| f.frame_id == Text::ContentGroupDescriptionFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the title (TIT2/TT2)
@@ -247,6 +322,11 @@ module Id3Taginator
         set_frame_fields(Text::TitleFrame, [:@title], title)
       end
 
+      # removes the title frame
+      def remove_title
+        @frames.delete_if { |f| f.frame_id == Text::TitleFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the subtitle (TIT3/TT3)
       #
       # @return [String, nil] returns subtitle
@@ -261,6 +341,11 @@ module Id3Taginator
         set_frame_fields(Text::SubtitleFrame, [:@subtitle], subtitle)
       end
 
+      # removes the subtitle frame
+      def remove_subtitle
+        @frames.delete_if { |f| f.frame_id == Text::SubtitleFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the initial key (<= 3 characters) (TKEY/TKE)
       #
       # @return [String, nil] returns the initial key
@@ -273,6 +358,11 @@ module Id3Taginator
       # @param initial_key [String] the initial key (<= 3 characters)
       def initial_key=(initial_key)
         set_frame_fields(Text::InitialKeyFrame, [:@initial_key], initial_key)
+      end
+
+      # removes the initial key frame
+      def remove_initial_key
+        @frames.delete_if { |f| f.frame_id == Text::InitialKeyFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the languages (TLAN/TLA)
@@ -292,6 +382,11 @@ module Id3Taginator
         set_frame_fields(Text::LanguageFrame, [:@languages], languages)
       end
 
+      # removes the languages frame
+      def remove_languages
+        @frames.delete_if { |f| f.frame_id == Text::LanguageFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the length in seconds (TLEN/TLE)
       #
       # @return [String, nil] returns the length
@@ -304,6 +399,11 @@ module Id3Taginator
       # @param length [String, Integer] the length in seconds
       def length=(length)
         set_frame_fields(Text::LengthFrame, [:@length], length)
+      end
+
+      # removes the length frame
+      def remove_length
+        @frames.delete_if { |f| f.frame_id == Text::LengthFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the media type (TMED/TMT)
@@ -320,6 +420,11 @@ module Id3Taginator
         set_frame_fields(Text::MediaTypeFrame, [:@media_type], media_type)
       end
 
+      # removes the media type frame
+      def remove_media_type
+        @frames.delete_if { |f| f.frame_id == Text::MediaTypeFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the original album (TOAL/TOT)
       #
       # @return [String, nil] returns the original album
@@ -334,6 +439,11 @@ module Id3Taginator
         set_frame_fields(Text::OriginalAlbumFrame, [:@original_album], original_album)
       end
 
+      # removes the original album frame
+      def remove_original_album
+        @frames.delete_if { |f| f.frame_id == Text::OriginalAlbumFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the original file name (TOFN/TOF)
       #
       # @return [String, nil] returns the original file name
@@ -346,6 +456,11 @@ module Id3Taginator
       # @param original_filename [String] the original filename
       def original_filename=(original_filename)
         set_frame_fields(Text::OriginalFilenameFrame, [:@original_filename], original_filename)
+      end
+
+      # removes the original filename frame
+      def remove_original_filename
+        @frames.delete_if { |f| f.frame_id == Text::OriginalFilenameFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the original writers (TOLY/TOL)
@@ -365,6 +480,11 @@ module Id3Taginator
         set_frame_fields(Text::OriginalWritersFrame, [:@original_writers], original_writers)
       end
 
+      # removes the original writers frame
+      def remove_original_writers
+        @frames.delete_if { |f| f.frame_id == Text::OriginalWritersFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the original artists (TOPE, :TOA)
       #
       # @return [Array<String>] returns the original artists
@@ -382,6 +502,11 @@ module Id3Taginator
         set_frame_fields(Text::OriginalArtistsFrame, [:@original_artists], original_artists)
       end
 
+      # removes the original artists frame
+      def remove_original_artists
+        @frames.delete_if { |f| f.frame_id == Text::OriginalArtistsFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the original release year (TORY, :TOR)
       #
       # @return [String, nil] returns the original album
@@ -396,6 +521,11 @@ module Id3Taginator
         set_frame_fields(Text::OriginalReleaseYearFrame, [:@original_release_year], original_release_year)
       end
 
+      # removes the original release year frame
+      def remove_original_release_year
+        @frames.delete_if { |f| f.frame_id == Text::OriginalReleaseYearFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the file owner (TOWN)
       #
       # @return [String, nil] returns the file owner
@@ -408,6 +538,11 @@ module Id3Taginator
       # @param file_owner [String] the file owner
       def file_owner=(file_owner)
         set_frame_fields(Text::FileOwnerFrame, [:@file_owner], file_owner)
+      end
+
+      # removes the file owner frame
+      def remove_file_owner
+        @frames.delete_if { |f| f.frame_id == Text::FileOwnerFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the artists (TPE1/TP1)
@@ -427,6 +562,11 @@ module Id3Taginator
         set_frame_fields(Text::ArtistsFrame, [:@artists], artists)
       end
 
+      # removes the artists frame
+      def remove_artists
+        @frames.delete_if { |f| f.frame_id == Text::ArtistsFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the album artist (TPE2/TP2)
       #
       # @return [String, nil] returns the album artist
@@ -439,6 +579,11 @@ module Id3Taginator
       # @param album_artist [String] the album artist
       def album_artist=(album_artist)
         set_frame_fields(Text::AlbumArtistFrame, [:@album_artist], album_artist)
+      end
+
+      # removes the album artist frame
+      def remove_album_artist
+        @frames.delete_if { |f| f.frame_id == Text::AlbumArtistFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the conductor (TPE3/TP3)
@@ -455,6 +600,11 @@ module Id3Taginator
         set_frame_fields(Text::ConductorFrame, [:@conductor], conductor)
       end
 
+      # removes the conductor frame
+      def remove_conductor
+        @frames.delete_if { |f| f.frame_id == Text::ConductorFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the modified by (TPE4/TP4)
       #
       # @return [String, nil] returns the modified by
@@ -467,6 +617,11 @@ module Id3Taginator
       # @param modified_by [String] the modified_by
       def modified_by=(modified_by)
         set_frame_fields(Text::ModifiedByFrame, [:@modified_by], modified_by)
+      end
+
+      # removes the modified by frame
+      def remove_modified_by
+        @frames.delete_if { |f| f.frame_id == Text::ModifiedByFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the part of set, e.g. CD 1/2 (TPOS/TPA)
@@ -486,6 +641,11 @@ module Id3Taginator
         set_frame_fields(Text::PartOfSetFrame, %i[@part @htotal], part_of_set.part, part_of_set.total)
       end
 
+      # removes the part of set frame
+      def remove_part_of_set
+        @frames.delete_if { |f| f.frame_id == Text::PartOfSetFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the publisher (TPUB/TPB)
       #
       # @return [String, nil] returns the publisher
@@ -498,6 +658,11 @@ module Id3Taginator
       # @param publisher [String] the publisher
       def publisher=(publisher)
         set_frame_fields(Text::PublisherFrame, [:@publisher], publisher)
+      end
+
+      # removes the publisher frame
+      def remove_publisher
+        @frames.delete_if { |f| f.frame_id == Text::PublisherFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the track number (TRCK/TRK)
@@ -518,6 +683,11 @@ module Id3Taginator
                          track_number.total)
       end
 
+      # removes the track number frame
+      def remove_track_number
+        @frames.delete_if { |f| f.frame_id == Text::TrackNumberFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the recording dates (TRDA/TRD)
       #
       # @return [Array<String>] returns the recording dates
@@ -535,6 +705,11 @@ module Id3Taginator
         set_frame_fields(Text::RecordingDatesFrame, [:@recording_dates], recording_dates)
       end
 
+      # removes the recording dates frame
+      def remove_recording_dates
+        @frames.delete_if { |f| f.frame_id == Text::RecordingDatesFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the internet radio station name (TRSN)
       #
       # @return [String, nil] returns the internet radio station name
@@ -547,6 +722,11 @@ module Id3Taginator
       # @param station_name [String] the internet radio station
       def internet_radio_station_name=(station_name)
         set_frame_fields(Text::InternetRadioStationFrame, [:@station_name], station_name)
+      end
+
+      # removes the internet radio station name frame
+      def remove_internet_radio_station_name
+        @frames.delete_if { |f| f.frame_id == Text::InternetRadioStationFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the file size in bytes excluding the id3v2 tag size (TSIZ/TSI)
@@ -563,6 +743,11 @@ module Id3Taginator
         set_frame_fields(Text::SizeFrame, [:@size], size)
       end
 
+      # removes the size frame
+      def remove_size
+        @frames.delete_if { |f| f.frame_id == Text::SizeFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the ISRC number (12 characters) (TSRC/TRC)
       #
       # @return [String, nil] returns the ISRC number
@@ -575,6 +760,11 @@ module Id3Taginator
       # @param isrc [String] the ISRC number (12 characters)
       def isrc=(isrc)
         set_frame_fields(Text::ISRCFrame, [:@isrc], isrc)
+      end
+
+      # removes the ISRC frame
+      def remove_isrc
+        @frames.delete_if { |f| f.frame_id == Text::ISRCFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the encoder (TSSE/TSS)
@@ -591,6 +781,11 @@ module Id3Taginator
         set_frame_fields(Text::EncoderFrame, [:@encoder], encoder)
       end
 
+      # removes the encoder frame
+      def remove_encoder
+        @frames.delete_if { |f| f.frame_id == Text::EncoderFrame.frame_id(@major_version, @options) }
+      end
+
       # extracts the year (TYER/TYE)
       #
       # @return [String, nil] returns the year
@@ -603,6 +798,11 @@ module Id3Taginator
       # @param year [String, Integer] the Year, must be 4 characters long e.g. 2020
       def year=(year)
         set_frame_fields(Text::YearFrame, [:@year], year)
+      end
+
+      # removes the year frame
+      def remove_year
+        @frames.delete_if { |f| f.frame_id == Text::YearFrame.frame_id(@major_version, @options) }
       end
 
       # extracts the user text infos (TXXX/TXX)
@@ -620,9 +820,9 @@ module Id3Taginator
       #
       # @param information [Frames::Text::Entities::UserInfo] the user text info to add
       def user_custom_text_information=(information)
-        set_frame_fields_by_selector(Text::UserTextInfoFrame, %i[@icontent],
+        set_frame_fields_by_selector(Text::UserTextInfoFrame, %i[@description @content],
                                      ->(f) { f.description == information.description },
-                                     information.content, information.description)
+                                     information.description, information.content)
       end
 
       alias add_user_custom_text_information user_custom_text_information=
@@ -632,7 +832,7 @@ module Id3Taginator
       # @param description [String] the description
       def remove_user_custom_text_information(description)
         @frames.delete_if do |f|
-          f.identifier == Text::UserTextInfoFrame.frame_id(@major_version, @options) && f.description == description
+          f.frame_id == Text::UserTextInfoFrame.frame_id(@major_version, @options) && f.description == description
         end
       end
     end
