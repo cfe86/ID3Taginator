@@ -29,7 +29,10 @@ module Id3Taginator
         end
 
         set_frame_fields_by_selector(Picture::PictureFrame, %i[@mime_type @picture_type @descriptor @picture_data],
-                                     ->(f) { f.descriptor == picture.descriptor },
+                                     lambda { |f|
+                                       f.picture_type == picture.picture_type &&
+                                         f.descriptor == picture.descriptor
+                                     },
                                      picture.mime_type, picture.picture_type, picture.descriptor, picture.picture_data)
       end
 

@@ -17,9 +17,9 @@ RSpec.describe Id3Taginator::AudioFile do
     tag.track = '1'
     tag.genre = :ROCK
 
-    expect(audio_file.audio_data).to eq(hex_string_to_bytes(audio_bytes))
+    expect(audio_file.read_audio_data).to eq(hex_string_to_bytes(audio_bytes))
 
-    audio_bytes_dump = audio_file.audio_file_to_byte
+    audio_bytes_dump = audio_file.audio_file_to_bytes
     audio_file_dump = Id3Taginator.build_by_file(StringIO.new(audio_bytes_dump))
 
     tag_dump = audio_file_dump.id3v1_tag

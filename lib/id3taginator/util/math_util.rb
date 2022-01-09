@@ -5,12 +5,14 @@ module Id3Taginator
     module MathUtil
       # converts a 4 byte synchsafe array to an integer
       #
-      # @param bytes [Array<Integer>] 4 byte array to convert
+      # @param bytes [Array<Integer>, nil] 4 byte array to convert
       #
       # @return [Integer] the 32 bit synchsafe integer
       def self.to_32_synchsafe_integer(bytes)
+        raise ArgumentError, 'Input can\'t be nil.' if bytes.nil?
+
         size = 0
-        bytes.each_with_index do |byte, index|
+        bytes&.each_with_index do |byte, index|
           size += 128**(4 - 1 - index) * (byte & 0x7f)
         end
 
@@ -25,6 +27,7 @@ module Id3Taginator
       def self.from_32_synchsafe_integer(num)
         bytes = Array.new(4, 0)
         bytes.each_with_index do |_, index|
+          # noinspection RubyMismatchedParameterType
           bytes[(0 - index).abs], num = num.divmod(128**(4 - 1 - index))
         end
 
@@ -33,10 +36,13 @@ module Id3Taginator
 
       # converts a given byte array to the integer representation
       #
-      # @param bytes [Array<Integer>] byte array to convert
+      # @param bytes [Array<Integer>, nil] byte array to convert
       #
       # @return [Integer] the integer
+      # noinspection RubyNilAnalysis
       def self.to_number(bytes)
+        raise ArgumentError, 'Input can\'t be nil.' if bytes.nil?
+
         size = 0
         num_bytes = bytes.length
         bytes.each_with_index do |byte, index|

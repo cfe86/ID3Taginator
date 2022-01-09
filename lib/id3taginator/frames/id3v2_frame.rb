@@ -24,6 +24,8 @@ module Id3Taginator
         payload_size = Util::MathUtil.to_number(file.read(3)&.bytes)
         frame_payload = file.read(payload_size)
 
+        raise Errors::Id3TagError, "Could not find any Frame data for #{frame_id}." if frame_payload.nil?
+
         instance = new(frame_id, payload_size, nil, frame_payload, HEADER_SIZE_V_2, nil)
         instance.options = options
         instance.process_content(frame_payload)
@@ -45,6 +47,8 @@ module Id3Taginator
 
         if flags.compression?
           compressed_data = file.read(payload_size)
+          raise Errors::Id3TagError, "Could not find any Frame data for #{frame_id}." if compressed_data.nil?
+
           frame_payload = Util::CompressUtil.decompress_data(compressed_data)
           # noinspection RubyScope
           payload_size = decompressed_size
@@ -57,6 +61,8 @@ module Id3Taginator
           group_identify = frame_payload[0]
           frame_payload = frame_payload[1..-1]
         end
+
+        raise Errors::Id3TagError, "Could not find any Frame data for #{frame_id}." if frame_payload.nil?
 
         instance = new(frame_id, payload_size, flags, frame_payload, HEADER_SIZE_V_3_4, group_identify)
         instance.options = options
@@ -77,6 +83,8 @@ module Id3Taginator
         flags = Id3v24FrameFlags.new(file.read(2))
 
         frame_payload = file.read(payload_size)
+        raise Errors::Id3TagError, "Could not find any Frame data for #{frame_id}." if frame_payload.nil?
+
         frame_payload = Util::SyncUtil.undo_synchronization(StringIO.new(frame_payload)) if flags.unsynchronisation?
         frame_payload = Util::CompressUtil.decompress_data(frame_payload) if flags.compression?
 
@@ -85,6 +93,8 @@ module Id3Taginator
           group_identify = frame_payload[0]
           frame_payload = frame_payload[1..-1]
         end
+
+        raise Errors::Id3TagError, "Could not find any Frame data for #{frame_id}." if frame_payload.nil?
 
         instance = new(frame_id, payload_size, flags, frame_payload, HEADER_SIZE_V_3_4, group_identify)
         instance.options = options
@@ -109,10 +119,10 @@ module Id3Taginator
       #
       # @param frame_id [String] the frame id
       # @param payload_size [Integer] the payload size (excludes header)
-      # @param flags [Id3v23FrameFlags, Id3v24FrameFlags] the frame flags
+      # @param flags [Id3v23FrameFlags, Id3v24FrameFlags, nil] the frame flags
       # @param frame_payload [String] the decompressed and unsynchronized payload
       # @param header_size [Integer] the frame header size, 6 vor v2, 10 otherwise
-      # @param group_identify [String] the group identify if present
+      # @param group_identify [String, nil] the group identify if present
       def initialize(frame_id, payload_size, flags, frame_payload, header_size = 10, group_identify = nil)
         @header_size = header_size
         @frame_id = frame_id.to_sym

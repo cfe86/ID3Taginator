@@ -333,15 +333,29 @@ module Id3Taginator
     Frames::Lyrics::Entities::UnsyncLyrics.new(language, descriptor, lyrics)
   end
 
-  # creates a picture object
+  # creates a picture object using data as String
   #
   # @param mime_type [String] the mime type e.g. images/png, or --> if picture data is a link
   # @param picture_type [Symbol] the picture type as symbol, e.g. :COVER_FRONT (check Picture::PictureType)
   # @param descriptor [String] description
   # @param picture_data [String] the picture data
   # @return [Picture] the picture
-  def self.create_picture(mime_type, picture_type, descriptor, picture_data)
+  def self.create_picture_from_data(mime_type, picture_type, descriptor, picture_data)
     Frames::Picture::Entities::Picture.new(mime_type, picture_type, descriptor, picture_data)
+  end
+
+  # creates a picture object using data from a provided file path
+  #
+  # @param mime_type [String] the mime type e.g. images/png, or --> if picture data is a link
+  # @param picture_type [Symbol] the picture type as symbol, e.g. :COVER_FRONT (check Picture::PictureType)
+  # @param descriptor [String] description
+  # @param file_path [String] the path to the picture file
+  # @return [Picture] the picture
+  def self.create_picture_from_file(mime_type, picture_type, descriptor, file_path)
+    picture_data = File.new(file_path).read
+    raise ArgumentError, "Could not find a picture at #{file_path}" if picture_data.nil?
+
+    create_picture_from_data(mime_type, picture_type, descriptor, picture_data)
   end
 
   # the creates a private frame object
@@ -390,7 +404,7 @@ module Id3Taginator
   # @param year [String, Integer] the year
   # @param holder [String] the copyright holder
   def self.create_copyright(year, holder)
-    Frames::Text::Entities::Copyright.new(year, holder)
+    Frames::Text::Entities::Copyright.new(year.to_s, holder)
   end
 
   # creates a date object

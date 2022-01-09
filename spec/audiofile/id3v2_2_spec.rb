@@ -11,10 +11,10 @@ RSpec.describe Id3Taginator::AudioFile do
     tag = audio_file.create_id3v2_2_tag
     add_frames(tag)
 
-    bytes = audio_file.audio_file_to_byte
+    bytes = audio_file.audio_file_to_bytes
 
     expect(audio_file.id3v2_tag).is_a?(Id3Taginator::Id3v22Tag)
-    expect(audio_file.audio_data).to eq(hex_string_to_bytes(audio_bytes))
+    expect(audio_file.read_audio_data).to eq(hex_string_to_bytes(audio_bytes))
 
     audio_file_parsed = Id3Taginator.build_by_file(StringIO.new(bytes))
 
@@ -24,26 +24,15 @@ RSpec.describe Id3Taginator::AudioFile do
     tag = audio_file.id3v2_tag
     tag_parsed = audio_file_parsed.id3v2_tag
 
-    expect(audio_file_parsed.id3v2_tag).is_a?(Id3Taginator::Id3v22Tag)
-    expect(tag.recommended_buffer_size).to eq(tag_parsed.recommended_buffer_size)
-    expect(tag.comments).to eq(tag_parsed.comments)
-    expect(tag.play_counter).to eq(tag_parsed.play_counter)
-    expect(tag.popularity).to eq(tag_parsed.popularity)
     expect(tag.audio_encryptions).to eq(tag_parsed.audio_encryptions)
+    expect(tag.pictures).to eq(tag_parsed.pictures)
+    expect(tag.comments).to eq(tag_parsed.comments)
     expect(tag.encapsulated_objects).to eq(tag_parsed.encapsulated_objects)
     expect(tag.involved_people).to eq(tag_parsed.involved_people)
-    expect(tag.unsync_lyrics).to eq(tag_parsed.unsync_lyrics)
     expect(tag.music_cd_identifier).to eq(tag_parsed.music_cd_identifier)
-    expect(tag.pictures).to eq(tag_parsed.pictures)
-    expect(tag.unique_file_identifiers).to eq(tag_parsed.unique_file_identifiers)
-    expect(tag.commercial_information_url).to eq(tag_parsed.commercial_information_url)
-    expect(tag.copyright_information_url).to eq(tag_parsed.copyright_information_url)
-    expect(tag.official_audio_file_url).to eq(tag_parsed.official_audio_file_url)
-    expect(tag.official_artist_url).to eq(tag_parsed.official_artist_url)
-    expect(tag.official_source_url).to eq(tag_parsed.official_source_url)
-    expect(tag.official_publisher_webpage).to eq(tag_parsed.official_publisher_webpage)
-    expect(tag.user_custom_url_links).to eq(tag_parsed.user_custom_url_links)
-
+    expect(tag.play_counter).to eq(tag_parsed.play_counter)
+    expect(tag.popularity).to eq(tag_parsed.popularity)
+    expect(tag.recommended_buffer_size).to eq(tag_parsed.recommended_buffer_size)
     expect(tag.album).to eq(tag_parsed.album)
     expect(tag.bpm).to eq(tag_parsed.bpm)
     expect(tag.composers).to eq(tag_parsed.composers)
@@ -75,51 +64,42 @@ RSpec.describe Id3Taginator::AudioFile do
     expect(tag.publisher).to eq(tag_parsed.publisher)
     expect(tag.track_number).to eq(tag_parsed.track_number)
     expect(tag.recording_dates).to eq(tag_parsed.recording_dates)
-    expect(tag.size).to eq(tag_parsed.size)
     expect(tag.isrc).to eq(tag_parsed.isrc)
     expect(tag.encoder).to eq(tag_parsed.encoder)
-    expect(tag.year).to eq(tag_parsed.year)
     expect(tag.user_custom_text_information).to eq(tag_parsed.user_custom_text_information)
-  end
+    expect(tag.year).to eq(tag_parsed.year)
+    expect(tag.unique_file_identifiers).to eq(tag_parsed.unique_file_identifiers)
+    expect(tag.unsync_lyrics).to eq(tag_parsed.unsync_lyrics)
+    expect(tag.commercial_information_url).to eq(tag_parsed.commercial_information_url)
+    expect(tag.copyright_information_url).to eq(tag_parsed.copyright_information_url)
+    expect(tag.official_audio_file_url).to eq(tag_parsed.official_audio_file_url)
+    expect(tag.official_artist_url).to eq(tag_parsed.official_artist_url)
+    expect(tag.official_source_url).to eq(tag_parsed.official_source_url)
+    expect(tag.official_publisher_webpage).to eq(tag_parsed.official_publisher_webpage)
+    expect(tag.user_custom_url_links).to eq(tag_parsed.user_custom_url_links)
 
-  it 'creates a id3v2.2 tag file' do
-    file_path = '/Users/chris/mkv/30 Seconds To Mars-01-EscapeFull.mp3'
-    file_path_out = '/Users/chris/mkv/30 Seconds To Mars-01-EscapeFull42.mp3'
-    file = File.open(file_path)
+    expect(audio_file_parsed.read_audio_data).to eq(hex_string_to_bytes(audio_bytes))
+    expect(audio_file_parsed.id3v2_tag).is_a?(Id3Taginator::Id3v22Tag)
 
-    audio_file = Id3Taginator.build_by_file(file)
-    tag = audio_file.create_id3v2_2_tag
-    add_frames(tag)
+    remove_frames(tag)
 
-    audio_file.write_audio_file(file_path_out)
+    expect(tag.number_of_frames).to eq(0)
   end
 
   def add_frames(tag)
-    tag.recommended_buffer_size = Id3Taginator.create_buffer(500, false, nil)
-    tag.comment = Id3Taginator.create_comment('eng', 'descriptor', 'comment')
-    tag.play_counter = 42
-    tag.popularity = Id3Taginator.create_popularimeter('e@mail.com', 0x05, 42)
     tag.add_audio_encryption(Id3Taginator.create_audio_encryption('owner_id', 42, 20, 'enc info'))
-    tag.encapsulated_object = Id3Taginator.create_encapsulated_object('images/png', 'filename',
-                                                                      'descriptor', 'data')
+    tag.add_picture(Id3Taginator.create_picture_from_data('images/png', :COVER_FRONT,
+                                                          'description', 'front cover'))
+    tag.add_picture(Id3Taginator.create_picture_from_data('images/png', :COVER_BACK,
+                                                          'description', 'back cover'))
+    tag.comment = Id3Taginator.create_comment('eng', 'descriptor', 'comment')
+    tag.encapsulated_object = Id3Taginator.create_encapsulated_object('images/png', 'filename', 'descriptor', 'data')
     tag.involved_people = [Id3Taginator.create_involved_person('involv1', 'involvee1'),
                            Id3Taginator.create_involved_person('involv2', 'involvee2')]
-    tag.unsync_lyrics = Id3Taginator.create_unsync_lyrics('eng', 'descriptor', 'lyrics')
     tag.music_cd_identifier = 'cd toc'
-    tag.add_picture(Id3Taginator.create_picture('images/png', :COVER_FRONT,
-                                                'description', 'front cover'))
-    tag.add_picture(Id3Taginator.create_picture('images/png', :COVER_BACK,
-                                                'description', 'back cover'))
-    tag.add_unique_file_identifier(Id3Taginator.create_unique_file_identifier('owner_id', 'identifier'))
-    tag.commercial_information_url = 'commercial info url'
-    tag.copyright_information_url = 'copyright info url'
-    tag.official_audio_file_url = 'official audio file url'
-    tag.official_artist_url = 'official artist url'
-    tag.official_source_url = 'official source url'
-    tag.official_publisher_webpage = 'official publisher url'
-    tag.add_user_custom_url_link(Id3Taginator.create_custom_url_link('description', 'url'))
-    tag.add_user_custom_url_link(Id3Taginator.create_custom_url_link('description2', 'url2'))
-
+    tag.play_counter = 42
+    tag.popularity = Id3Taginator.create_popularimeter('e@mail.com', 0x05, 42)
+    tag.recommended_buffer_size = Id3Taginator.create_buffer(500, false, nil)
     tag.album = 'album'
     tag.bpm = 42
     tag.composers = %w[comp1 comp2]
@@ -151,13 +131,91 @@ RSpec.describe Id3Taginator::AudioFile do
     tag.publisher = 'publisher'
     tag.track_number = Id3Taginator.create_track_number(1, 12)
     tag.recording_dates = %w[date1 date2]
-    tag.size = 42
     tag.isrc = '123456789987'
     tag.encoder = 'encoder'
-    tag.year = 2021
     tag.add_user_custom_text_information(Id3Taginator.create_custom_user_text_info('descr', 'content'))
     tag.add_user_custom_text_information(Id3Taginator.create_custom_user_text_info('descr2', 'content2'))
+    tag.year = 2021
+    tag.add_unique_file_identifier(Id3Taginator.create_unique_file_identifier('owner_id', 'identifier'))
+    tag.unsync_lyrics = Id3Taginator.create_unsync_lyrics('eng', 'descriptor', 'lyrics')
+    tag.commercial_information_url = 'commercial info url'
+    tag.copyright_information_url = 'copyright info url'
+    tag.official_audio_file_url = 'official audio file url'
+    tag.official_artist_url = 'official artist url'
+    tag.official_source_url = 'official source url'
+    tag.official_publisher_webpage = 'official publisher url'
+    tag.add_user_custom_url_link(Id3Taginator.create_custom_url_link('description', 'url'))
+    tag.add_user_custom_url_link(Id3Taginator.create_custom_url_link('description2', 'url2'))
   end
 
-  private :add_frames
+  def remove_frames(tag)
+    tag.remove_audio_encryption('owner_id')
+    tag.remove_picture('description')
+    tag.remove_comment('eng', 'descriptor')
+    tag.remove_encapsulated_object('descriptor')
+    tag.remove_involved_people
+    tag.remove_music_cd_identifier
+    tag.remove_play_counter
+    tag.remove_popularity
+    tag.remove_recommended_buffer_size
+    tag.remove_album
+    tag.remove_bpm
+    tag.remove_composers
+    tag.remove_genres
+    tag.remove_copyright
+    tag.remove_date
+    tag.remove_playlist_delay
+    tag.remove_encoded_by
+    tag.remove_writers
+    tag.remove_file_type
+    tag.remove_time
+    tag.remove_content_group_description
+    tag.remove_title
+    tag.remove_subtitle
+    tag.remove_initial_key
+    tag.remove_languages
+    tag.remove_length
+    tag.remove_media_type
+    tag.remove_original_album
+    tag.remove_original_filename
+    tag.remove_original_writers
+    tag.remove_original_artists
+    tag.remove_original_release_year
+    tag.remove_artists
+    tag.remove_album_artist
+    tag.remove_conductor
+    tag.remove_modified_by
+    tag.remove_part_of_set
+    tag.remove_publisher
+    tag.remove_track_number
+    tag.remove_recording_dates
+    tag.remove_isrc
+    tag.remove_encoder
+    tag.remove_user_custom_text_information('descr')
+    tag.remove_user_custom_text_information('descr2')
+    tag.remove_year
+    tag.remove_unique_file_identifier('owner_id')
+    tag.remove_unsync_lyrics('eng', 'descriptor')
+    tag.remove_commercial_information_url
+    tag.remove_copyright_information_url
+    tag.remove_official_audio_file_url
+    tag.remove_official_artist_url
+    tag.remove_official_source_url
+    tag.remove_official_publisher_webpage
+    tag.remove_user_custom_url_link('description')
+    tag.remove_user_custom_url_link('description2')
+  end
+
+  def write_id3v2_2_tag_mp3(input_file, output_file)
+    audio_file = Id3Taginator.build_by_file(File.new(input_file))
+    audio_file.remove_id3v1_tag
+    audio_file.remove_id3v2_tag
+
+    tag = audio_file.create_id3v2_2_tag
+    add_frames(tag)
+
+    audio_file.write_audio_file(output_file)
+  end
+
+  private :add_frames, :remove_frames
 end

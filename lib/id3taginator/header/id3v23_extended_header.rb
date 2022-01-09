@@ -9,7 +9,7 @@ module Id3Taginator
       # constructor
       #
       # @param size [Integer] the size of the extended header
-      # @param flags [Array<Integer>] 2 byte Array representing the flags
+      # @param flags [String] 2 byte Array as a String representing the flags
       # @param padding [Integer] the number of padding of the extended header
       # @param crc_data [String] the crc data if present
       def initialize(size, flags, padding, crc_data = nil)
@@ -30,7 +30,7 @@ module Id3Taginator
       #
       # @return [Boolean] true if crc is present, else false
       def crc?
-        (@flags & 0b10000000) == 0b10000000
+        (@flags[0] & 0b10000000) == 0b10000000
       end
     end
   end

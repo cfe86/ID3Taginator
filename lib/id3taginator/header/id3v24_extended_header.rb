@@ -9,7 +9,7 @@ module Id3Taginator
       # constructor
       #
       # @param size [Integer] the size of the extended header
-      # @param flags [Array<Integer>] 2 byte Array representing the flags
+      # @param flags [String] 2 byte Array as a String representing the flags
       def initialize(size, flags)
         @size = size
         @flags = flags

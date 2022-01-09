@@ -52,13 +52,13 @@ module Id3Taginator
 
     # Constructor
     #
-    # @param title [String] the title
-    # @param artist [String] the artist
-    # @param album [String] the album title
-    # @param year [Integer, String] the year
-    # @param comment [String] the comment
-    # @param track [Integer] the track number
-    # @param genre [Symbol] the genre name as a Symbol, e.g. :ROCK
+    # @param title [String, nil] the title
+    # @param artist [String, nil] the artist
+    # @param album [String, nil] the album title
+    # @param year [Integer, String, nil] the year
+    # @param comment [String, nil] the comment
+    # @param track [Integer, nil] the track number
+    # @param genre [Symbol, nil] the genre name as a Symbol, e.g. :ROCK
     def initialize(title = nil, artist = nil, album = nil, year = nil, comment = nil, track = nil, genre = :INVALID)
       @title = title
       @artist = artist
@@ -137,14 +137,14 @@ module Id3Taginator
     # @return [String] id3v1 byte dump as a string. tag.bytes returns the bytes of the dump
     def to_bytes
       res = 'TAG'
-      res += pad_left(@title, 30)
-      res += pad_left(@artist, 30)
-      res += pad_left(@album, 30)
-      res += pad_left(@year&.to_s, 4)
+      res += pad_left(@title.nil? ? '' : @title, 30)
+      res += pad_left(@artist.nil? ? '' : @artist, 30)
+      res += pad_left(@album.nil? ? '' : @album, 30)
+      res += pad_left(@year.nil? ? '' : @year&.to_s, 4)
       if @track.nil?
-        res += pad_left(@comment, 30)
+        res += pad_left(@comment.nil? ? '' : @comment, 30)
       else
-        res += pad_left(@comment, 28)
+        res += pad_left(@comment.nil? ? '' : @comment, 28)
         res += 0.chr
         res += @track.chr
       end

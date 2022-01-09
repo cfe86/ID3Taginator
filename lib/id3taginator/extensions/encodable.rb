@@ -105,8 +105,11 @@ module Id3Taginator
       # @return [String] the decoded String
       def decode_using_encoding_byte(str)
         encoding_byte = str[0]&.bytes&.first
+        raise Errors::Id3TagError, "Could not find encoding byte for String: #{str}" if encoding_byte.nil?
+
         encoding = find_encoding(encoding_byte)
 
+        # noinspection RubyMismatchedParameterType
         decode(str[1..-1], encoding)
       end
 

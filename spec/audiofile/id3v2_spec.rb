@@ -16,12 +16,12 @@ RSpec.describe Id3Taginator::AudioFile do
     tag.add_picture(frames::Picture::Entities::Picture.new('images/png', :COVER_BACK,
                                                            'description', 'back cover'))
     tag.add_picture(frames::Picture::Entities::Picture.new('images/png', :COVER_FRONT,
-                                                           'description2', 'front cover2'))
+                                                           'description', 'front cover2'))
 
     pictures = tag.pictures
     expect(pictures.length).to eq(2)
     cover_front = pictures.find { |p| p.picture_type == :COVER_FRONT }
-    expect(cover_front.descriptor).to eq('description2')
+    expect(cover_front.descriptor).to eq('description')
     expect(cover_front.picture_data).to eq('front cover2')
   end
 end

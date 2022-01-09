@@ -11,7 +11,7 @@ module Id3Taginator
     #
     # @return [Id3v24Tag] returns an empty Id3v2.4 tag
     def self.build_empty(options)
-      new(0, Header::Id3v2Flags.new(0x00), 0, nil, options)
+      new(0, Header::Id3v2Flags.new(0x00), 0, StringIO.new, options)
     end
 
     # Constructor
@@ -38,6 +38,8 @@ module Id3Taginator
       size = Util::MathUtil.to_32_synchsafe_integer(file.read(4)&.bytes)
       number_of_flags = file.readbyte
       flags = file.read(number_of_flags)
+
+      raise Errors::Id3TagError, 'Could not find extended header flag bytes. ID3v2 Tag is corrupt.' if flags.nil?
 
       Header::Id3v24ExtendedHeader.new(size, flags)
     end

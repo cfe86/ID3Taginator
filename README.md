@@ -1,5 +1,33 @@
 # Id3taginator
 
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Implemented Frames](#implemented-frames)
+- [Usage](#usage)
+    * [Read Tags](#read-tags)
+    * [Modify Tag](#modify-tag)
+        + [Remove Tag](#remove-tag)
+        + [Modify existing Frame](#modify-existing-frame)
+        + [Create new Tag](#create-new-tag)
+            - [What is the difference?](#what-is-the-difference-)
+    * [Write Audio File with modified Tags](#write-audio-file-with-modified-tags)
+    * [Options](#options)
+        - [default_encode_dest](#default-encode-dest)
+        - [default_decode_dest](#default-decode-dest)
+        - [padding_bytes](#padding-bytes)
+        - [ignore_v23_frame_error](#ignore-v23-frame-error)
+        - [ignore_v24_frame_error](#ignore-v24-frame-error)
+        - [add_size_frame](#add-size-frame)
+        + [How to set Options](#how-to-set-options)
+    * [Create Entities](#create-entities)
+    * [Custom Frames](#custom-frames)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+- [Code of Conduct](#code-of-conduct)
+
+## Introduction
+
 Id3Taginator is a ID3v1, ID3v2.2/3/4 [tag reader](https://en.wikipedia.org/wiki/ID3) and writer fully written in Ruby and does not
 rely on TagLib or any other 3rd party library to read/write iD3 Tags. It aims to offer a simple
 way to read and write ID3Tags.
@@ -245,14 +273,13 @@ Once a file is modified, it must be written to save the changes. To do this, Id3
 ```ruby
 audio_file.write_audio_file('path/to/new/file')
 ```
-Which writes the modified file to the specified path. 
-**Caution:** If the audio file is build using `build_by_file` or `build_by_path`, then the file should not written to the same path.
-This will result in flawed files. Reason for this, during the write process the stream is still read, and if the file is overwritten,
-it behaves unexpected. Therefore, always use a different file path. An option to cover this case will be added later.
+Which writes the modified file to the specified path. The audio data will be cached, so the file can be written to the same
+path that is used to read the MP3 file, essentially overwriting it.
 
 The other alternative is to write the result to a byte array represented as a String:
+
 ```ruby
-audio_file.audio_file_to_byte
+audio_file.audio_file_to_bytes
 ```
 This will return a byte array represented as a String (str.bytes) with the modified audio file, and the decision how to 
 handle it, is completely yours.
@@ -339,9 +366,10 @@ Here, the options are only applied to this Audio File instance. All other create
 
 Some Setter such as `copyright=` or `add_picture` require an Entity Instance as an argument. All arguments can be created 
 like this
+
 ```ruby
 Id3Taginator.create_buffer(42, false, 5)
-Id3Taginator.create_picture('image/png', :COVER_FRONT, 'Description', 'Some picture data')
+Id3Taginator.create_picture_from_data('image/png', :COVER_FRONT, 'Description', 'Some picture data')
 ```
 There is a create method for all Entities.
 

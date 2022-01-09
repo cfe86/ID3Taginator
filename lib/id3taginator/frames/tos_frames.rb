@@ -10,8 +10,9 @@ module Id3Taginator
       # @return [Frames::Tos::Entities::TermsOfUse, nil] returns the ToU Frame
       def terms_of_use
         frame = find_frame(Tos::TermsOfUseFrame.frame_id(@major_version, @options))
+        return nil if frame.nil?
 
-        Frames::Tos::Entities::TermsOfUse.new(frame&.language, frame&.text)
+        Frames::Tos::Entities::TermsOfUse.new(frame.language, frame.text)
       end
 
       # sets the terms of use frame (USER)
@@ -31,8 +32,9 @@ module Id3Taginator
       # @return [Frames::Tos::Entities::Ownership, nil] returns the Ownership Frame
       def ownership
         frame = find_frame(Tos::OwnershipFrame.frame_id(@major_version, @options))
+        return nil if frame.nil?
 
-        Frames::Tos::Entities::Ownership.new(frame&.price_paid, frame&.date_of_purchase, frame&.seller)
+        Frames::Tos::Entities::Ownership.new(frame.price_paid, frame.date_of_purchase, frame.seller)
       end
 
       # sets the ownership frame (OWNE)

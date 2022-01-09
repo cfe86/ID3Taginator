@@ -3,7 +3,7 @@
 module Id3Taginator
   class Id3v22Tag < Id3v2Tag
 
-    HEADER_SIZE = 6
+    HEADER_SIZE = 10
 
     # builds an empty Id3v2.2 tag with the given options set
     #
@@ -11,7 +11,7 @@ module Id3Taginator
     #
     # @return [Id3v22Tag] returns an empty Id3v2.2 tag
     def self.build_empty(options)
-      new(0, Header::Id3v2Flags.new(0x00), 0, nil, options)
+      new(0, Header::Id3v2Flags.new(0x00), 0, StringIO.new, options)
     end
 
     # Constructor

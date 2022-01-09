@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = 'id3taginator'
-  spec.version       = '0.5'
+  spec.version       = '0.8'
   spec.authors       = ['Christian Feier']
   spec.email         = ['Christian.Feier@gmail.com']
 

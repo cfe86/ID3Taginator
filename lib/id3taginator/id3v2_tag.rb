@@ -44,18 +44,20 @@ module Id3Taginator
     def self.build_from_file(file, options)
       file.seek(0)
       tag = file.read(3)
-      raise Errors::Id3TagError, "#{tag} is no valid id3v2 tag. Tag seems corrupted." unless tag == IDENTIFIER
+      raise Errors::Id3TagError, "#{tag} is no valid ID3v2 tag. Tag seems corrupted." unless tag == IDENTIFIER
 
       major_version = file.readbyte
       minor_version = file.readbyte
       flags = Header::Id3v2Flags.new(file.readbyte)
-      tag_size = Util::MathUtil.to_32_synchsafe_integer(file.read(4).bytes)
+      tag_size = Util::MathUtil.to_32_synchsafe_integer(file.read(4)&.bytes)
 
       tag_data = file.read(tag_size)
+      raise Errors::Id3TagError, 'There is no Tag data to read. ID3v2 tag seems to be invalid.' if tag_data.nil?
+
       tag_data = Util::SyncUtil.undo_synchronization(StringIO.new(tag_data)) if flags.unsynchronized?
 
       id3v2_tag = id3v2_tag_for_version(major_version)
-      # noinspection RubyArgCount
+
       id3v2_tag.new(minor_version, flags, tag_size, StringIO.new(tag_data), options)
     end
 
@@ -64,7 +66,7 @@ module Id3Taginator
     # @param version [Integer] the id3tag major version 2,3 or 4
     # @param options [Options::Options] the options to use
     #
-    # @return [Id3v2Tag] the Id3v2 tag object for the requested version
+    # @return [Id3v22Tag, Id3v23Tag, Id3v24Tag] the Id3v2 tag object for the requested version
     def self.build_for_version(version, options)
       case version
       when 2
@@ -150,6 +152,9 @@ module Id3Taginator
       @flags.unsynchronized = enabled
     end
 
+    # adds the size tag if not present. If v2.4, the option ignore_v24_frame_error must be true
+    #
+    # @param audio_size [Integer] the audio size bytes
     def add_size_tag_if_not_present(audio_size)
       return nil unless @options.add_size_frame
 
@@ -198,7 +203,7 @@ module Id3Taginator
     #
     # @param major_version [Integer] the major version, 2,3 or 4
     #
-    # @return [Class<Id3v2Tag>] the correct id3v2 tag object
+    # @return [Class<Id3v22Tag>, Class<Id3v23Tag>, Class<Id3v24Tag>] the correct id3v2 tag object
     def self.id3v2_tag_for_version(major_version)
       case major_version
       when 2
